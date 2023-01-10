@@ -1,6 +1,6 @@
 repo git 
 3 semaines apres 
-date de rendu : vers le 6/02
+date de rendu : 19/02
 bien structure le projet
 
 scraper billboard recupérer titre + artiste + classement
