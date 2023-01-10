@@ -1,0 +1,15 @@
+repo git 
+3 semaines apres 
+date de rendu : vers le 6/02
+bien structure le projet
+
+scraper billboard recupérer titre + artiste + classement
+historique aussi genre 3 mois
+genius crédit(label, date de sortie, genre) -> elastic search
+
+filtrer en fonction du genre de la date de sortie , le label
+
+voir l'évolution des chansons sur un graph
++ genre
+
+recupérer les covers d'albums sur genius
