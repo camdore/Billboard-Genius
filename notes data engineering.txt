@@ -13,3 +13,14 @@ voir l'évolution des chansons sur un graph
 + genre
 
 recupérer les covers d'albums sur genius
+
+---------
+flask 
+pour le dev web permet d'afficher des pages web avec des balises hmtl?
+permet de rediriger vers d'autres pages avec requete redirect
+
+on peut envoyer des données à stocker dans mongo methods=["POST"]
+
+bonus docker mettre le flask ou bdd
+bonus scraping
+readme
