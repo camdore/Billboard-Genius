@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 import time 
+import pandas as pd
 
 start = time.time()
 # Initialize the webdriver
@@ -23,52 +24,40 @@ driver.get("https://www.billboard.com/charts/hot-100/")
 # Wait for the page to load
 driver.implicitly_wait(10)
 
-def cleanlist(webElements,alist):
-    for i in range(len(webElements)):
-        if len(webElements[i].text)!= 0:
-            alist.append(webElements[i].text)
+iterateur = list(range(1,110,11))
+iterateur.remove(1)
 
-    return alist 
+def scraper(list,xpath):
+    for i in range(2,111):
+        if i not in iterateur : 
+            WebElement = driver.find_element(By.XPATH,xpath%(i))
+            list.append(WebElement.text)
 
-# Extract the song title and artist
-titres = driver.find_elements(By.CLASS_NAME,"c-title")
-ltitres = []
-ltitres = cleanlist(titres,ltitres)
+    return list
 
-# on elève tout les index en trop
-ltitres.pop(1)  
-for i in range(100,len(ltitres)):
-    ltitres.pop()
+XpathTitle = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[4]/ul/li[1]/h3"
+XpathArtist = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[4]/ul/li[1]/span"
+XpathRank = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[1]/span "
+XpathLastWeek = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[4]/ul/li[4]/span"
+XpathPeakPosition = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[4]/ul/li[5]/span"
+XpathWeeksOnChart = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[4]/ul/li[6]/span"
 
-# print(ltitres)
-# print(len(ltitres))
+title = []
+artist = []
+rank = []
+last_week =[]
+peak_pos = []
+weeks_on_chart = []
 
-artistes = driver.find_elements(By.CLASS_NAME,"c-label")
-lartistes = []
-lartistes = cleanlist(artistes,lartistes)
+title = scraper(title,XpathTitle)
+artist = scraper(artist,XpathArtist)
+rank = scraper(rank,XpathRank)
+last_week = scraper(last_week,XpathLastWeek)
+peak_pos = scraper(peak_pos,XpathPeakPosition)
+weeks_on_chart = scraper(weeks_on_chart,XpathWeeksOnChart)
 
-# on enlève tout les index en trop bis
-del lartistes[0:3]
-for value in lartistes:
-    if value == 'NEW' or value == 'RE- ENTRY':
-        lartistes.remove(value) 
-
-# print(lartistes)
-print(len(lartistes))
-
-classement = []
-for value in lartistes:
-    if value == '-' or value.isnumeric()== True:
-        classement.append(value)
-
-for index,value in enumerate(lartistes):
-    if value == '-' or value.isnumeric() == True:
-        lartistes.pop(index)
-
-# print(lartistes)
-print(len(lartistes))
-# print(classement)
-# print(len(classement))
+df = pd.DataFrame(list(zip(title,artist,rank,last_week,peak_pos,weeks_on_chart)),columns=['Title','Artist','Rank','Last Week','Peak Positon','Weeks on charts'])
+print(df)
 
 # Close the webdriver
 driver.close()
