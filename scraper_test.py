@@ -26,13 +26,15 @@ driver.get("https://www.billboard.com/charts/billboard-200/")
 # Wait for the page to load
 driver.implicitly_wait(10)
 
+# reject all cookies
+driver.find_element(By.XPATH,"/html/body/div[6]/div[2]/div/div/div[2]/div/div/button[1]").click()
+
 iterateur100 = list(range(1,110,11))
 iterateur100.remove(1)
 iterateur200 = list(range(1,220,11))
 iterateur200.remove(1)
 
-# 111 ou 221
-
+# nb_max 111 ou 221
 def scraper(list,xpath,iterateur,nb_max):
     for i in range(2,nb_max):
         if i not in iterateur : 
@@ -48,19 +50,16 @@ XpathLastWeek = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]
 XpathPeakPosition = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[4]/ul/li[5]/span"
 XpathWeeksOnChart = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[4]/ul/li[6]/span"
 
-title = []
-artist = []
-rank = []
-last_week =[]
-peak_pos = []
-weeks_on_chart = []
+allXpath = [XpathTitle,XpathArtist,XpathRank,XpathLastWeek,XpathPeakPosition,XpathWeeksOnChart]
 
-title = scraper(title,XpathTitle,iterateur200,221)
-artist = scraper(artist,XpathArtist,iterateur200,221)
-rank = scraper(rank,XpathRank,iterateur200,221)
-last_week = scraper(last_week,XpathLastWeek,iterateur200,221)
-peak_pos = scraper(peak_pos,XpathPeakPosition,iterateur200,221)
-weeks_on_chart = scraper(weeks_on_chart,XpathWeeksOnChart,iterateur200,221)
+title,artist,rank,last_week,peak_pos,weeks_on_chart = [],[],[],[],[],[]
+
+allList = [title,artist,rank,last_week,peak_pos,weeks_on_chart]
+
+i = [scraper(i,j,iterateur200,221) for i, j in zip(allList, allXpath)]
+
+# for i, j in zip(allList, allXpath):
+#     i = scraper(i,j,iterateur200,221)
 
 df = pd.DataFrame(list(zip(title,artist,rank,last_week,peak_pos,weeks_on_chart)),columns=['Title','Artist','Rank','Last Week','Peak Positon','Weeks on charts'])
 print(df)
