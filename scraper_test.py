@@ -24,7 +24,8 @@ driver = webdriver.Chrome(ChromeDriverManager().install())
 driver.get("https://www.billboard.com/charts/billboard-200/")
 
 # Wait for the page to load
-driver.implicitly_wait(10)
+# driver.implicitly_wait(10)
+time.sleep(10)
 
 # reject all cookies
 driver.find_element(By.XPATH,"/html/body/div[6]/div[2]/div/div/div[2]/div/div/button[1]").click()
@@ -50,32 +51,19 @@ XpathLastWeek = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]
 XpathPeakPosition = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[4]/ul/li[5]/span"
 XpathWeeksOnChart = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[4]/ul/li[6]/span"
 
-artistes = driver.find_elements(By.CLASS_NAME,"c-label")
-lartistes = []
-lartistes = cleanlist(artistes,lartistes)
+allXpath = [XpathTitle,XpathArtist,XpathRank,XpathLastWeek,XpathPeakPosition,XpathWeeksOnChart]
 
-# on enlève tout les index en trop bis
-del lartistes[0:3]
-for value in lartistes:
-    if value == 'NEW' or value == 'RE- ENTRY':
-        lartistes.remove(value) 
+title,artist,rank,last_week,peak_pos,weeks_on_chart = [],[],[],[],[],[]
 
-# print(lartistes)
-print(len(lartistes))
+allList = [title,artist,rank,last_week,peak_pos,weeks_on_chart]
 
-classement = []
-for value in lartistes:
-    if value == '-' or value.isnumeric()== True:
-        classement.append(value)
+i = [scraper(i,j,iterateur200,221) for i, j in zip(allList, allXpath)]
 
-for index,value in enumerate(lartistes):
-    if value == '-' or value.isnumeric() == True:
-        lartistes.pop(index)
+# for i, j in zip(allList, allXpath):
+#     i = scraper(i,j,iterateur200,221)
 
-# print(lartistes)
-print(len(lartistes))
-# print(classement)
-# print(len(classement))
+df = pd.DataFrame(list(zip(title,artist,rank,last_week,peak_pos,weeks_on_chart)),columns=['Title','Artist','Rank','Last Week','Peak Positon','Weeks on charts'])
+print(df)
 
 # Close the webdriver
 driver.close()
