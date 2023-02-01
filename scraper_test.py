@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.service import Service
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 import time 
+import pandas as pd
 
 start = time.time()
 # Initialize the webdriver
@@ -18,57 +19,48 @@ driver = webdriver.Chrome(ChromeDriverManager().install())
 # driver = webdriver.Chrome(service=service)
 
 # Navigate to the website
-driver.get("https://www.billboard.com/charts/hot-100/")
+# driver.get("https://www.billboard.com/charts/hot-100/")
+# driver.get("https://www.billboard.com/charts/billboard-global-200/")
+driver.get("https://www.billboard.com/charts/billboard-200/")
 
 # Wait for the page to load
 driver.implicitly_wait(10)
 
-def cleanlist(webElements,alist):
-    for i in range(len(webElements)):
-        if len(webElements[i].text)!= 0:
-            alist.append(webElements[i].text)
+# reject all cookies
+driver.find_element(By.XPATH,"/html/body/div[6]/div[2]/div/div/div[2]/div/div/button[1]").click()
 
-    return alist 
+iterateur100 = list(range(1,110,11))
+iterateur100.remove(1)
+iterateur200 = list(range(1,220,11))
+iterateur200.remove(1)
 
-# Extract the song title and artist
-titres = driver.find_elements(By.CLASS_NAME,"c-title")
-ltitres = []
-ltitres = cleanlist(titres,ltitres)
+# nb_max 111 ou 221
+def scraper(list,xpath,iterateur,nb_max):
+    for i in range(2,nb_max):
+        if i not in iterateur : 
+            WebElement = driver.find_element(By.XPATH,xpath%(i))
+            list.append(WebElement.text)
 
-# on elève tout les index en trop
-ltitres.pop(1)  
-for i in range(100,len(ltitres)):
-    ltitres.pop()
+    return list
 
-# print(ltitres)
-# print(len(ltitres))
+XpathTitle = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[4]/ul/li[1]/h3"
+XpathArtist = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[4]/ul/li[1]/span"
+XpathRank = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[1]/span "
+XpathLastWeek = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[4]/ul/li[4]/span"
+XpathPeakPosition = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[4]/ul/li[5]/span"
+XpathWeeksOnChart = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[4]/ul/li[6]/span"
 
-artistes = driver.find_elements(By.CLASS_NAME,"c-label")
-lartistes = []
-lartistes = cleanlist(artistes,lartistes)
+title,artist,rank,last_week,peak_pos,weeks_on_chart = [],[],[],[],[],[]
 
-# on enlève tout les index en trop bis
-del lartistes[0:3]
-for value in lartistes:
-    if value == 'NEW' or value == 'RE- ENTRY':
-        lartistes.remove(value) 
+title = scraper(title,XpathTitle,iterateur200,221)
+artist = scraper(artist,XpathArtist,iterateur200,221)
+rank = scraper(rank,XpathRank,iterateur200,221)
+last_week = scraper(last_week,XpathLastWeek,iterateur200,221)
+peak_pos = scraper(peak_pos,XpathPeakPosition,iterateur200,221)
+weeks_on_chart = scraper(weeks_on_chart,XpathWeeksOnChart,iterateur200,221)
 
-# print(lartistes)
-print(len(lartistes))
-
-classement = []
-for value in lartistes:
-    if value == '-' or value.isnumeric()== True:
-        classement.append(value)
-
-for index,value in enumerate(lartistes):
-    if value == '-' or value.isnumeric() == True:
-        lartistes.pop(index)
-
-# print(lartistes)
-print(len(lartistes))
-# print(classement)
-# print(len(classement))
+df = pd.DataFrame(list(zip(title,artist,rank,last_week,peak_pos,weeks_on_chart)),columns=['Title','Artist','Rank','Last Week','Peak Positon','Weeks on charts'])
+print(df)
 
 # Close the webdriver
 driver.close()
