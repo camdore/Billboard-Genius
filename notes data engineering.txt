@@ -5,15 +5,16 @@ bien structure le projet
 
 1) scraper billboard recupérer titre + artiste + classement
 historique aussi genre 3 mois -> selenium
-2) faire la database sur mongo DB (lien pymong)
-3) recupérer sur genius crédit(label, date de sortie, genre) -> elastic search
+2) scraper genius recupérer crédit(label, date de sortie, genre)
+3) faire la database sur mongoDB (lien pymongo)
+4) requeter sur la base grâce à elasticsearch
 
 filtrer en fonction du genre de la date de sortie , le label
 
 voir l'évolution des chansons sur un graph
 + genre
 
-recupérer les covers d'albums sur genius sur mongo db avec lien image 
+recupérer les covers d'albums sur genius sur mongoDB avec lien image 
 
 https://www.billboard.com/charts/hot-100/
 ---------
