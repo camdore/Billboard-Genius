@@ -71,3 +71,5 @@ driver.close()
 end = time.time()
 temps = end - start
 print("temps d'execution :",temps,"s")
+
+print(df['Title']['Black Panther: Wakanda Forever (Music from and Inspired By)'])
