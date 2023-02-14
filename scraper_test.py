@@ -1,34 +1,35 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
-from bs4 import BeautifulSoup
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import time 
+import datetime
+from datetime import date
 import pandas as pd
+from pymongo import MongoClient
 
 start = time.time()
 # Initialize the webdriver
-# de manière basique
-# driver = webdriver.Chrome()
-
 # avec ChromeDriverManager mieux car update du driver automatiquement
 driver = webdriver.Chrome(ChromeDriverManager().install())
 
-# si on a télécharger le driver directement dans le dossier 
-# service = Service(executable_path="./chromedriver.exe")
-# driver = webdriver.Chrome(service=service)
-
 # Navigate to the website
 # driver.get("https://www.billboard.com/charts/hot-100/")
-# driver.get("https://www.billboard.com/charts/billboard-global-200/")
-driver.get("https://www.billboard.com/charts/billboard-200/")
+driver.get("https://www.billboard.com/charts/billboard-global-200/")
+# driver.get("https://www.billboard.com/charts/billboard-200/")
 
 # Wait for the page to load
-# driver.implicitly_wait(10)
-time.sleep(10)
+driver.implicitly_wait(10)
+# time.sleep(10)
 
 # reject all cookies
 driver.find_element(By.XPATH,"/html/body/div[6]/div[2]/div/div/div[2]/div/div/button[1]").click()
+
+# enlever la box privacy policy
+driver.find_element(By.XPATH,"/html/body/div[5]/div[1]/span").click()
 
 iterateur100 = list(range(1,110,11))
 iterateur100.remove(1)
@@ -44,6 +45,31 @@ def scraper(list,xpath,iterateur,nb_max):
 
     return list
 
+def get_dates_of_year_by_week(year, nb_mois):
+    starting_week = 52 - 4 * nb_mois
+    current_week = starting_week
+    first_day_of_year = datetime.datetime(year, 1, 1)
+    week_start = first_day_of_year + datetime.timedelta(days=(current_week - 1) * 7)
+    
+    while week_start.year == year:
+        every_date.append(week_start)
+        current_week += 1
+        week_start = first_day_of_year + datetime.timedelta(days=(current_week - 1) * 7)
+    
+    return every_date
+
+def first_day_of_each_week_for_year(year):
+    first_day_of_year = datetime.datetime(year, 1, 1)
+    one_week = datetime.timedelta(weeks=1)
+    current_week = first_day_of_year
+    every_date.append(first_day_of_year)
+
+    while current_week.year == year:
+        current_week += one_week
+        every_date.append(current_week)
+
+    return every_date
+
 XpathTitle = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[4]/ul/li[1]/h3"
 XpathArtist = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[4]/ul/li[1]/span"
 XpathRank = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div[%d]/ul/li[1]/span "
@@ -54,22 +80,52 @@ XpathWeeksOnChart = "/html/body/div[4]/main/div[2]/div[3]/div/div/div/div[2]/div
 allXpath = [XpathTitle,XpathArtist,XpathRank,XpathLastWeek,XpathPeakPosition,XpathWeeksOnChart]
 
 title,artist,rank,last_week,peak_pos,weeks_on_chart = [],[],[],[],[],[]
+every_date,list_date = [],[]
 
 allList = [title,artist,rank,last_week,peak_pos,weeks_on_chart]
 
-i = [scraper(i,j,iterateur200,221) for i, j in zip(allList, allXpath)]
+# on recupère toutes les dates que l'on veut
+get_dates_of_year_by_week(2022,1)
+first_day_of_each_week_for_year(2023)
 
-# for i, j in zip(allList, allXpath):
-#     i = scraper(i,j,iterateur200,221)
+for elt_date in every_date:
+    elt_date = elt_date.strftime("%Y-%m-%d")
+    if elt_date >= date.today().strftime("%Y-%m-%d"): # si la date sélectionnée dans la liste est plus grande que la date d'aujourd'hui alors on sort de la boucle
+        break
+    else : 
+        # get on the correct billboard page 
+        driver.get(f"https://www.billboard.com/charts/billboard-global-200/{elt_date}")
+        # create a list with the date for all entries (200 per date) 
+        [list_date.append(elt_date) for i in range(200)]
+        # scrape all the data
+        i = [scraper(i,j,iterateur200,221) for i, j in zip(allList, allXpath)]
 
-df = pd.DataFrame(list(zip(title,artist,rank,last_week,peak_pos,weeks_on_chart)),columns=['Title','Artist','Rank','Last Week','Peak Positon','Weeks on charts'])
+df = pd.DataFrame(list(zip(title,artist,rank,last_week,peak_pos,weeks_on_chart,list_date)),columns=['Title','Artist','Rank','Last Week','Peak Positon','Weeks on charts','Date'])
 print(df)
-
+df.to_csv('dataframe.csv',index=False)
 # Close the webdriver
 driver.close()
+
+genius =  list(zip(title, artist))
+
+# partie MongoDB
+data = df.to_dict('records')
+# data = df.to_json('records')
+
+# Connect to the MongoDB database
+client = MongoClient("mongodb://localhost:27017/")
+db = client["mydatabase"]
+collection = db["mycollection"]
+
+# insérer le json/dict dans la db
+collection.insert_many(data)
+collection.find_one()
+cursor = collection.find()
+# for document in cursor :
+#     print('-----')
+#     print(document)
+
 
 end = time.time()
 temps = end - start
 print("temps d'execution :",temps,"s")
-
-print(df['Title']['Black Panther: Wakanda Forever (Music from and Inspired By)'])
