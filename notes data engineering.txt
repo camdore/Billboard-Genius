@@ -8,6 +8,8 @@ historique aussi genre 3 mois -> selenium
 2) scraper genius recupérer crédit(label, date de sortie, genre)
 3) faire la database sur mongoDB (lien pymongo)
 4) requeter sur la base grâce à elasticsearch
+5) interface avec flask
+6) faire de la dataviz (kibana?)
 
 filtrer en fonction du genre de la date de sortie , le label
 

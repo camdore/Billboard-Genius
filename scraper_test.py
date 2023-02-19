@@ -25,7 +25,7 @@ driver.get("https://www.billboard.com/charts/billboard-200/")
 
 # Wait for the page to load
 # driver.implicitly_wait(10)
-time.sleep(10)
+time.sleep(50)
 
 # reject all cookies
 driver.find_element(By.XPATH,"/html/body/div[6]/div[2]/div/div/div[2]/div/div/button[1]").click()
@@ -73,3 +73,15 @@ temps = end - start
 print("temps d'execution :",temps,"s")
 
 print(df['Title']['Black Panther: Wakanda Forever (Music from and Inspired By)'])
+
+
+# for i in song_artists[0:3]:
+
+#     driver.get('https://genius.com/{}-lyrics'.format(str(i[0]))) #ensemble des sites internet
+#     # driver.find_element(By.XPATH,"/html/body/div[7]/div[3]/div[1]/div/div[2]/div/button[1]").click()
+# driver.quit()
+
+# Les Xpaths des cookies changent:
+
+#/html/body/div[1]/main/div[1]/div[3]/div[1]/div[2]/div/div[1]/span[1]/span sos sza
+#/html/body/div[1]/main/div[1]/div[4]/div/div[1]/div[2]/div
