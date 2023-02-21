@@ -22,13 +22,8 @@ driver.get("https://www.billboard.com/charts/billboard-global-200/")
 # driver.get("https://www.billboard.com/charts/billboard-200/")
 
 # Wait for the page to load
-<<<<<<< HEAD
 # driver.implicitly_wait(10)
 time.sleep(50)
-=======
-driver.implicitly_wait(10)
-# time.sleep(10)
->>>>>>> 0862bfd1113fa0184f9559e92204eef069af9b07
 
 # reject all cookies
 driver.find_element(By.XPATH,"/html/body/div[6]/div[2]/div/div/div[2]/div/div/button[1]").click()
@@ -90,12 +85,13 @@ every_date,list_date = [],[]
 allList = [title,artist,rank,last_week,peak_pos,weeks_on_chart]
 
 # on recupère toutes les dates que l'on veut
-get_dates_of_year_by_week(2022,1)
+get_dates_of_year_by_week(2022,2)
 first_day_of_each_week_for_year(2023)
 
 for elt_date in every_date:
     elt_date = elt_date.strftime("%Y-%m-%d")
-    if elt_date >= date.today().strftime("%Y-%m-%d"): # si la date sélectionnée dans la liste est plus grande que la date d'aujourd'hui alors on sort de la boucle
+    today = date.today() - datetime.timedelta(weeks=1) # on enlève 1 semaine pour eviter que la semaine actuelle le classement ne soit pas publié
+    if elt_date >= today.strftime("%Y-%m-%d"): # si la date sélectionnée dans la liste est plus grande que la date d'aujourd'hui alors on sort de la boucle
         break
     else : 
         # get on the correct billboard page 
@@ -133,7 +129,6 @@ cursor = collection.find()
 
 end = time.time()
 temps = end - start
-<<<<<<< HEAD
 print("temps d'execution :",temps,"s")
 
 print(df['Title']['Black Panther: Wakanda Forever (Music from and Inspired By)'])
@@ -149,6 +144,3 @@ print(df['Title']['Black Panther: Wakanda Forever (Music from and Inspired By)']
 
 #/html/body/div[1]/main/div[1]/div[3]/div[1]/div[2]/div/div[1]/span[1]/span sos sza
 #/html/body/div[1]/main/div[1]/div[4]/div/div[1]/div[2]/div
-=======
-print("temps d'execution :",temps,"s")
->>>>>>> 0862bfd1113fa0184f9559e92204eef069af9b07
