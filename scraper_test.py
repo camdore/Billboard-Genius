@@ -10,26 +10,30 @@ import datetime
 from datetime import date
 import pandas as pd
 from pymongo import MongoClient
+from elasticsearch import Elasticsearch
+from elasticsearch_dsl import Document, Text, Integer
+from elasticsearch.helpers import bulk
+import numpy as np
 
-start = time.time()
+##################################################### SCRAPING BILLBOARD #####################################################
 # Initialize the webdriver
 # avec ChromeDriverManager mieux car update du driver automatiquement
-driver = webdriver.Chrome(ChromeDriverManager().install())
+options = webdriver.ChromeOptions()
+options.add_argument('--headless')
+options.add_argument('--disable-gpu')
+driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+# driver = webdriver.Chrome(ChromeDriverManager().install())
 
 # Navigate to the website
-# driver.get("https://www.billboard.com/charts/hot-100/")
 driver.get("https://www.billboard.com/charts/billboard-global-200/")
-# driver.get("https://www.billboard.com/charts/billboard-200/")
 
-# Wait for the page to load
-# driver.implicitly_wait(10)
-time.sleep(50)
 
 # reject all cookies
 driver.find_element(By.XPATH,"/html/body/div[6]/div[2]/div/div/div[2]/div/div/button[1]").click()
+driver.find_element(By.XPATH,"//*[@id='onetrust-reject-all-handler']").click()
 
 # enlever la box privacy policy
-driver.find_element(By.XPATH,"/html/body/div[5]/div[1]/span").click()
+# driver.find_element(By.XPATH,"/html/body/div[5]/div[1]/span").click()
 
 iterateur100 = list(range(1,110,11))
 iterateur100.remove(1)
@@ -102,45 +106,16 @@ for elt_date in every_date:
         i = [scraper(i,j,iterateur200,221) for i, j in zip(allList, allXpath)]
 
 df = pd.DataFrame(list(zip(title,artist,rank,last_week,peak_pos,weeks_on_chart,list_date)),columns=['Title','Artist','Rank','Last Week','Peak Positon','Weeks on charts','Date'])
-print(df)
-df.to_csv('dataframe.csv',index=False)
+
+df.to_csv('dataframe.csv',sep=';',index=False)
+
 # Close the webdriver
 driver.close()
 
+##################################################### SCRAPING BILLBOARD #####################################################
 genius =  list(zip(title, artist))
 
-# partie MongoDB
-data = df.to_dict('records')
-# data = df.to_json('records')
-
-# Connect to the MongoDB database
-client = MongoClient("mongodb://localhost:27017/")
-db = client["mydatabase"]
-collection = db["mycollection"]
-
-# insérer le json/dict dans la db
-collection.insert_many(data)
-collection.find_one()
-cursor = collection.find()
-# for document in cursor :
-#     print('-----')
-#     print(document)
 
 
-end = time.time()
-temps = end - start
-print("temps d'execution :",temps,"s")
 
-print(df['Title']['Black Panther: Wakanda Forever (Music from and Inspired By)'])
-
-
-# for i in song_artists[0:3]:
-
-#     driver.get('https://genius.com/{}-lyrics'.format(str(i[0]))) #ensemble des sites internet
-#     # driver.find_element(By.XPATH,"/html/body/div[7]/div[3]/div[1]/div/div[2]/div/button[1]").click()
-# driver.quit()
-
-# Les Xpaths des cookies changent:
-
-#/html/body/div[1]/main/div[1]/div[3]/div[1]/div[2]/div/div[1]/span[1]/span sos sza
-#/html/body/div[1]/main/div[1]/div[4]/div/div[1]/div[2]/div
+##################################################### ELASTIC SEARCH #####################################################
