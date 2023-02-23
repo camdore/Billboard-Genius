@@ -1,12 +1,16 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import pandas as pd
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
     data = pd.read_csv("dataframe_finale.csv", sep=";")
-    return render_template("index.html", data=data.to_html())
+    if request.method == "POST":
+        query = request.form["genre"]
+        results = data.query('Genre.str.contains(@query, na=False)', engine='python')
+        return render_template("index.html",  table=results.to_html(classes="table", index=False, table_id="table"))
+    return render_template("index.html", table=data.to_html(classes="table", index=False, table_id="table"))
 
 if __name__ == "__main__":
     app.run()
