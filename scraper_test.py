@@ -14,6 +14,7 @@ from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Document, Text, Integer
 from elasticsearch.helpers import bulk
 import numpy as np
+import re
 
 ##################################################### SCRAPING BILLBOARD #####################################################
 # Initialize the webdriver
