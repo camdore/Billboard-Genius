@@ -11,8 +11,61 @@
     
       // Récupérer les lignes de la table
       var rows = table.getElementsByTagName("tr");
+
     
-      // Parcourir toutes les lignes et cacher celles qui ne correspondent pas à la recherche
+       // Parcourir toutes les lignes et cacher celles qui ne correspondent pas à la recherche
+      for (var i = 0; i < rows.length; i++) {
+        var title = rows[i].getElementsByTagName("td")[0];
+        if (title) {
+          var txtValue = title.textContent || title.innerText;
+          if (txtValue.toUpperCase().indexOf(input.value.toUpperCase()) > -1) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
+        }
+      }
+
+        // Parcourir toutes les lignes et cacher celles qui ne correspondent pas à la recherche
+      for (var i = 0; i < rows.length; i++) {
+        var artist = rows[i].getElementsByTagName("td")[1];
+        if (artist) {
+          var txtValue = artist.textContent || artist.innerText;
+          if (txtValue.toUpperCase().indexOf(input.value.toUpperCase()) > -1) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
+        }
+      }
+
+       // Parcourir toutes les lignes et cacher celles qui ne correspondent pas à la recherche
+      for (var i = 0; i < rows.length; i++) {
+        var distributor = rows[i].getElementsByTagName("td")[10];
+        if (distributor) {
+          var txtValue = distributor.textContent ||distributor.innerText;
+          if (txtValue.toUpperCase().indexOf(input.value.toUpperCase()) > -1) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
+        }
+      }
+
+        // Parcourir toutes les lignes et cacher celles qui ne correspondent pas à la recherche
+      for (var i = 0; i < rows.length; i++) {
+        var producers = rows[i].getElementsByTagName("td")[8];
+        if (producers) {
+          var txtValue = producers.textContent || producers.innerText;
+          if (txtValue.toUpperCase().indexOf(input.value.toUpperCase()) > -1) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
+        }
+      }
+
+        // Parcourir toutes les lignes et cacher celles qui ne correspondent pas à la recherche
       for (var i = 0; i < rows.length; i++) {
         var genre = rows[i].getElementsByTagName("td")[7];
         if (genre) {
@@ -24,12 +77,30 @@
           }
         }
       }
+
+        // Afficher ou cacher la ligne selon le résultat du filtre
+        //if (showRow) {
+       //     rows[i].style.display = "";
+       // } else {
+        //    rows[i].style.display = "none";
+      //  } 
     }
+
 </script>   
 <body>
-  <h1>Rechercher des chansons par genre</h1>
-  <form>
-    <input type="text" id="search" placeholder="Search genre...">
+  <h1>Rechercher des chansons</h1>
+  <form onsubmit="filterTable(); return false;">
+    <input type="checkbox" id="title" name="title" value="Title">
+    <label for="title">Title</label>
+    <input type="checkbox" id="artist" name="artist" value="Artist">
+    <label for="artist">Artist</label>
+    <input type="checkbox" id="distributor" name="distributor" value="distributor">
+    <label for="distributor">Distributor</label>
+    <input type="checkbox" id="producers" name="producers" value="Producers">
+    <label for="producers">Producers</label>
+    <input type="checkbox" id="genre" name="genre" value="Genre">
+    <label for="genre">Genre</label>
+    <input type="text" id="search" placeholder="Search...">
     <button type="button" onclick="filterTable()">Search</button>
   </form>
   {{ table | safe }}
