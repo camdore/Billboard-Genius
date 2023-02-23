@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  mongo:
+    image: mongo
+    container_name: MongoBill
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./data/mongo:/data/db
+    ports:
+        - 27017:27017
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch-7.4.0.jar:7.4.0
+    container_name: elasticsearch
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.4.0
+    container_name: kibana
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "5601:5601"
+  dashboard:
+    build: ./dash
+    container_name : dashboard
+    volumes:  
+      - ./dash:/home/dev/code
+      - ./data:/home/dev/data
+    ports:
+      - 8050:8050
+    environment:
+      FLASK_ENV: development
