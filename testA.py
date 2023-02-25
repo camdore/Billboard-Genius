@@ -20,7 +20,9 @@ def index():
             columns.append("Producers")
         if request.form.get("genre"):
             columns.append("Genre")
+
         # Filtrer les résultats en fonction des colonnes sélectionnées
+
         if len(columns) > 0:
             results = pd.DataFrame(columns=data.columns)
             for col in columns:
