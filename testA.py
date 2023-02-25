@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request ,url_for
 import pandas as pd
 
 app = Flask(__name__)
@@ -33,6 +33,13 @@ def index():
         return render_template("index.html", table=results.to_html(classes="table", index=False, table_id="table"))
     # Retourner le tableau complet par défaut
     return render_template("index.html", table=data.to_html(classes="table", index=False, table_id="table"))
+
+@app.route('/graphiques')
+
+def graphiques():
+
+    return render_template('graphiques.html')
+
 
 if __name__ == "__main__":
     app.run()
