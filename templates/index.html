@@ -1,44 +1,84 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Recherche de musiques</title>
-</head>
-<script>
-    function filterTable() {
-      // Récupérer le champ de recherche et la table
-      var input = document.getElementById("search");
-      var table = document.getElementById("table");
+<!-- templates/results.html -->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+
+    <title>Résultats de la recherche</title>
+  </head>
+
+  <body>
+    <h1>Rechercher des chansons</h1>
+    <form method="POST">
+        <input type="text" name="query" placeholder="Enter your search query" required>
+        <br><br>
+        <label><input type="checkbox" name="field" value="Title"> Title</label>
+        <label><input type="checkbox" name="field" value="Artist"> Artist</label>
+        <label><input type="checkbox" name="field" value="Genre"> Genre</label>
+        <label><input type="checkbox" name="field" value="Distributor"> Distributor</label>
+        <label><input type="checkbox" name="field" value="Producer"> Producer</label>
+        <br><br>
+        <input type="submit" name="submit" value="Search">
+    </form>
     
-      // Récupérer les lignes de la table
-      var rows = table.getElementsByTagName("tr");
-    
-      // Parcourir toutes les lignes et cacher celles qui ne correspondent pas à la recherche
-      for (var i = 0; i < rows.length; i++) {
-        var title = rows[i].getElementsByTagName("td")[0];
-        var artist = rows[i].getElementsByTagName("td")[1];
-        var distributor = rows[i].getElementsByTagName("td")[10];
-        var genre = rows[i].getElementsByTagName("td")[7];
-        if (title && artist && distributor && genre) {
-          var txtValue = title.textContent + artist.textContent + distributor.textContent + genre.textContent;
-          if (txtValue.toUpperCase().indexOf(input.value.toUpperCase()) > -1) {
-            rows[i].style.display = "";
-          } else {
-            rows[i].style.display = "none";
-          }
-        }
-      }
-    }
-</script>   
-<body>
-  <h1>Rechercher des chansons</h1>
-  <form>
-    <input type="text" id="search" placeholder="Rechercher...">
-    <input type="checkbox" name="title" value="title">Title</input>
-    <input type="checkbox" name="artist" value="artist">Artist</input>
-    <input type="checkbox" name="distributor" value="distributor">Distributor</input>
-    <input type="checkbox" name="genre" value="genre">Genre</input>
-    <button type="button" onclick="filterTable()">Rechercher</button>
-  </form>
-  {{ table | safe }}
-</body>
+    {{ table | safe }}
+
+    <div class="container mt-4">
+      <h1>Résultats de la recherche</h1>
+
+      {% if results %}
+        <table class="table mt-4">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Title</th>
+              <th scope="col">Artist</th>
+              <th scope="col">Rank</th>
+              <th scope="col">Last Week</th>
+              <th scope="col">Peak Positon</th>
+              <th scope="col">Weeks on charts</th>
+              <th scope="col">Date</th>
+              <th scope="col">Genre</th>
+              <th scope="col">Producers</th>
+              <th scope="col">Writers</th>
+              <th scope="col">Distributor</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for result in results %}
+              <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <td>{{ result.Title }}</td>
+                <td>{{ result.Artist }}</td>
+                <td>{{ result['Rank'] }}</td>
+                <td>{{ result['Last Week'] }}</td>
+                <td>{{ result['Peak Positon'] }}</td>
+                <td>{{ result['Weeks on charts'] }}</td>
+                <td>{{ result.Date }}</td>
+                <td>{{ result.Genre }}</td>
+                <td>{{ result.Producers }}</td>
+                <td>{{ result.Writers }}</td>
+                <td>{{ result.Distributor }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>Aucun résultat trouvé pour votre recherche.</p>
+      {% endif %}
+
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+  </body>
 </html>
