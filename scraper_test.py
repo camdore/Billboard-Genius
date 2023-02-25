@@ -10,11 +10,12 @@ import datetime
 from datetime import date
 import pandas as pd
 from elasticsearch import Elasticsearch
-from elasticsearch_dsl import Document, Text, Integer
 from elasticsearch.helpers import bulk
 import numpy as np
 import re
+from flask import Flask, render_template, request
 
+start_time = time.time()
 ##################################################### SCRAPING BILLBOARD #####################################################
 
 # Initialise le webdriver avec des options pour améliorer la rapidité
@@ -25,7 +26,6 @@ driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
 # Navigue sur le site Billboard Global 200
 driver.get("https://www.billboard.com/charts/billboard-global-200/")
-
 
 # rejete les cookies
 # driver.find_element(By.XPATH,"/html/body/div[6]/div[2]/div/div/div[2]/div/div/button[1]").click()
@@ -130,17 +130,17 @@ for elt_date in every_date:
 
         i = [scraper(i,j) for i, j in zip(allList, allXpath)] # scrape les données la page pour tout les Xpaths
 
-df = pd.DataFrame(list(zip(title,artist,rank,last_week,peak_pos,weeks_on_chart,list_date)),columns=['Title','Artist','Rank','Last Week','Peak Positon','Weeks on charts','Date'])
+df = pd.DataFrame(list(zip(title,artist,rank,last_week,peak_pos,weeks_on_chart,list_date)),columns=['Title','Artist','Rank','Last Week','Peak Position','Weeks on charts','Date'])
 
 # df.to_csv('dataframe.csv',sep=';',index=False)
 # print(df)
-# print(df.info())
 # Close the webdriver
 driver.close()
 
 ##################################################### SCRAPING GENIUS #####################################################
 
 # on récupère toutes les chansons (titre,artiste) et l'on enlève toutes les dupplications pour optimiser le temps de scraping
+df = pd.read_csv('dataframe.csv',delimiter=';')
 df2 = pd.concat([df['Title'],df['Artist']],axis=1)
 df2 = df2.drop_duplicates(ignore_index=True)
 
@@ -187,6 +187,7 @@ driver_genius = webdriver.Chrome(ChromeDriverManager().install(), options=option
 
 driver_genius.get("https://genius.com/")
 
+driver_genius.implicitly_wait(3)
 driver_genius.find_element(By.ID,"onetrust-accept-btn-handler").click()
 
  
@@ -203,20 +204,20 @@ for i in range(len(song_artists)):
 
     song.append(song_artists[i][1])
     artist.append(song_artists[i][0])
-    driver_genius.implicitly_wait(3)
+    # driver_genius.implicitly_wait(3)
 
     # clicker sur la chanson
     try :
         
         driver_genius.implicitly_wait(3)
         driver_genius.find_element(By.XPATH,"/html/body/routable-page/ng-outlet/search-results-page/div/div[2]/div[1]/div[1]/search-result-section/div/div[2]/search-result-items/div/search-result-item/div/mini-song-card/a/div[2]").click()
-        driver_genius.implicitly_wait(3)
+        # driver_genius.implicitly_wait(3)
     
     except:
 
         driver_genius.implicitly_wait(3)
         driver_genius.find_element(By.XPATH,"/html/body/routable-page/ng-outlet/search-results-page/div/div[2]/div[1]/div[2]/search-result-section/div/div[2]/search-result-items/div[1]/search-result-item/div/mini-song-card/a").click()
-        driver_genius.implicitly_wait(3)
+        # driver_genius.implicitly_wait(3)
 
 
     # scroll to credits
@@ -313,15 +314,17 @@ for i in range(len(song_artists)):
 
     print(i,song_artists[i][1]+' '+song_artists[i][0])
 
+driver_genius.close()
 
 list_title = list(df2['Title'])
 list_artist = list(df2['Artist'])
 df_genius_557 = pd.DataFrame({'Title':list_title, 'Artist':list_artist,'Genre':Tags,'Producers':producteurs_text,'Writers':ecrivains_text,'Distributor':distributor_text})
 
-df_genius_557.to_csv('data_sans_doublons.csv',sep=';', index=False)
+# df_genius_557.to_csv('data_sans_doublons.csv_test',sep=';', index=False)
 
+print(df_genius_557.info())
 
-df = pd.read_csv('dataframe.csv',delimiter=';')
+# df = pd.read_csv('dataframe.csv',delimiter=';')
 list_genre, list_writers, list_producers, list_distributor  = [],[],[],[]
 
 # Cette boucle permet de parcourir la df initiale avec toutes les pages scrapées sur le site Billboard (4200 lignes).
@@ -332,7 +335,7 @@ list_genre, list_writers, list_producers, list_distributor  = [],[],[],[]
 for value in df.iterrows():
     title1 = value[1][0]
     artist1 = value[1][1]
-    print(value[0])
+    # print(value[0])
     match_found = False
     for value2 in df_genius_557.iterrows():
         title2 = value2[1][0]
@@ -355,6 +358,105 @@ df_inter = pd.DataFrame({'Genre':list_genre,'Producers':list_producers,'Writers'
 
 df_finale = pd.concat([df, df_inter], axis=1)
 
-# df_finale.to_csv('dataframe_finale.csv',sep=';', index=False)
-
+# df_finale.to_csv('dataframe_finale_test.csv',sep=';', index=False)
+print(df_finale.info())
 ##################################################### ELASTIC SEARCH #####################################################
+
+df_finale = pd.read_csv('dataframe_finale.csv',delimiter=';')
+# conversion des variables et formatage
+df_finale['Last Week'] = df_finale['Last Week'].replace("-",0)
+df_finale['Last Week']= df_finale['Last Week'].astype('int64')
+df_finale['Date'] = pd.to_datetime(df_finale['Date'])
+
+data = df_finale.to_dict('records')
+
+# séparation des strings dans plusieurs catégories
+for i,song in enumerate(data):
+    song['Genre'] = re.split(', | & ', song['Genre'])
+    song['Producers'] = re.split(', | & ', song['Producers'])
+    try:
+        song['Writers'] = re.split(', | & ', song['Writers'])
+    except TypeError:
+        data[i]["Writers"] = "None"
+        song['Writers'] = re.split(', | & ', song['Writers'])
+    try:
+        song['Distributor'] = re.split(', | & ', song['Distributor'])
+    except TypeError:
+        data[i]["Distributor"] = "None"
+        song['Distributor'] = re.split(', | & ', song['Distributor'])
+
+# démarrage ElasticSearch
+es = Elasticsearch([{'host': 'localhost', 'port': 9200,"scheme": "http"}])
+
+# indexation des données dans elastic search
+def generate_data(data):
+    for docu in data:
+        yield {
+            "_index": "billboard",
+            "_type": "song",
+            "_source": {k:v if v else None for k,v in docu.items()},
+        }
+        
+if es.indices.exists('billboard')==True:
+    es.indices.delete(index='billboard')
+    bulk(es, generate_data(data))
+else :
+    bulk(es, generate_data(data))
+
+
+##################################################### FLASK APP ##########################################################
+app = Flask(__name__)
+
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        query = request.form['query']
+        # field = request.form['field']
+        field = request.form.get('field')
+        results = search(query, field)
+        return render_template('index.html', results=results)
+    else:
+        return render_template('index.html')
+
+def search(query, field):
+    QUERY ={
+    "query": {
+        "bool": {
+        "must": [],
+        "filter": [
+            {
+            "bool": {
+                "should": [
+                {
+                    "match_phrase": {
+                    field : query
+                    }
+                }
+                ],
+                "minimum_should_match": 1
+            }
+            }
+        ],
+        "should": [],
+        "must_not": []
+        }
+    }
+    }
+    result = es.search(index="billboard", body=QUERY,size=4200)
+
+    results = []
+    [results.append(elt['_source']) for elt in result["hits"]["hits"]]
+
+    return results
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+# Lancer la page (pour l'instant) avec la commande "flask --app scraper_test run"
+
+end_time = time.time()
+execution_time = end_time - start_time
+
+print("Temps d'exécution : ", execution_time, " secondes")
