@@ -83,7 +83,7 @@ Dans l'application Web, vous pouvez recherchez grâce à la barre de recherche e
 
 La visualisation graphique de la donnée permet de faire ressortir des nombreuses tendences interessantes liés aux préférences du grand public. 
 
-Ici par exemple peut voir comment l'arrivé du noel influence lurdement les abitudes des auditeurs: 
+Ici par exemple on peut voir comment l'arrivé de noel influence lurdement les abitudes des auditeurs: 
 
 ![noel](assets/noel.jpg)
 
@@ -95,6 +95,8 @@ Ici par exemple peut voir comment l'arrivé du noel influence lurdement les abit
 
 
 ## Link project
+
+https://github.com/camdore/Billboard-Genius
 
 ## Auteurs 
 
