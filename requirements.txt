@@ -1,0 +1,12 @@
+bs4
+datetime
+elasticsearch
+Flask
+Flask-Cors
+Flask-WTF
+numpy
+pandas
+plotly.express
+pymongo
+selenium
+webdriver_manager
