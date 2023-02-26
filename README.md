@@ -85,13 +85,13 @@ La visualisation graphique de la donnée permet de faire ressortir des nombreuse
 
 Ici par exemple peut voir comment l'arrivé du noel influence lurdement les abitudes des auditeurs: 
 
-![noel](Billboard-Genius/assets/noel.jpg)
+![noel](assets/noel.jpg)
 
-![hip_po](BIllboard-Genius/assets/hip_pop.jpg)
+![hip_po](assets/hip_pop.jpg)
 
-![jazz](Billboard-Genius/assets/jazz.jpg)
+![jazz](assets/jazz.jpg)
 
-![rock](Billboard-Genius/assets/rock.jpg)
+![rock](assets/rock.jpg)
 
 
 ## Link project
