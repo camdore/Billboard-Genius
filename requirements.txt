@@ -1,6 +1,6 @@
 datetime
 elasticsearch
-Flask
+flask
 Flask-Cors
 Flask-WTF
 matplotlib
