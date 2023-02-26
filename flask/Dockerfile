@@ -16,5 +16,5 @@ RUN pip install -r /requirements.txt
 # On install les dépendances via pipenv
 RUN  pip install --upgrade pip &&  pip install pipenv && pipenv install --skip-lock
 
-CMD ["python", "testA.py" ]
+CMD ["python", "scraper_test.py" ]
 #CMD ["/bin/bash"]
