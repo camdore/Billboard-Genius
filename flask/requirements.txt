@@ -1,0 +1,16 @@
+elasticsearch==7.17.9
+elasticsearch-dsl
+Flask
+Flask-Compress
+Flask-Cors
+Flask-WTF
+numpy
+pandas
+plotly
+requests
+selenium
+webdriver-manager
+dash
+dash-core-components
+dash-html-components
+dash-table
