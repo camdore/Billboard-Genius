@@ -4,13 +4,13 @@ Ce projet python permet de créer une application dédiée à la musique contena
 
 ## Présentation du sujet
 
-Pour cela nous avons récuperé par le biasis du scraping les donnée contenus dans deux sites web : 
+Pour cela nous avons récuperé par le biais du scraping les donnée contenus dans deux sites web : 
 
-1) **Billbord** : nous permet de récupérer le classement hebdomadaire des 200 meilleurs chansons d'artistes du classement global 200. Dans le classement du Billboard global 200 les données récupés sont le nom de l'artiste, le titre et des informations liés le rang de la chanson tel que le rang occupé dans semaine actuelle, le meilleur rang atteint et le nombre de semaines que le titre a passé dans le classement.
+1) **Billbord** : nous permet de récupérer le classement hebdomadaire des 200 meilleurs chansons d'artistes du classement global 200. Dans le classement du Billboard global 200 les données récupés sont le nom de l'artiste, le titre et des informations liés au le rang de la chanson tel que le rang occupé dans semaine actuelle, le meilleur rang atteint et le nombre de semaines que le titre a passé dans le classement.
 
-2) **Genius** : nous permet de récupérer des données plus spécifiques telles que les genres musicaux, le producteurs, Les dstributeurs et les écrivains du text
+2) **Genius** : nous permet de récupérer des données plus spécifiques telles que les genres musicaux, le producteurs, Les dstributeurs et les écrivains du text.
 
-Pour une meilleure visualisation des données récuperés le scraping est effectué sur une durée de 5 mois.(Il est important de noter que à cause d'une durée d'attente de environ 2h pour effetuer le scraping dans ça totalité il à été pensé judicieux de stocker les données du mois d'octobre 2022 jusqu'au mois de février 2023 dans un fichier csv).
+Pour une meilleure visualisation des données récuperés le scraping est effectué sur une durée de 5 mois.(Il est important de noter que à cause d'une durée d'attente d'environ 2h pour effetuer le scraping dans ça totalité il à été considéré plus judicieux de stocker les données à partir du mois d'octobre 2022 jusqu'au mois de février 2023 dans un fichier csv).
 
 Une fois l’application lancée vous aurez accès au données de plus de 4000 chanson. Vous pourrez visualiser des données intéressantes concernant l'évolution des tendences au cours du temps ainsi que les genres et distrubuters les plus dominants dans la musique.
 
@@ -61,7 +61,10 @@ Veuillez copier coller cette url dans votre navigateur préféré pour pouvoir a
     Billboard-Genius/ 
 
     |-- assets
-        |--positions_basket.jpg
+        |--noel.jpg
+        |--hip_pop.jpg
+        |--jazz.jpg
+        |--rock.jpg
         
     |-- scrap
     |-- csv_geoloc.csv 
@@ -77,13 +80,13 @@ On déclare sur l’honneur que le code fourni a été produit par nous même.
 
 ## L'application web 
 
-Dans l'application Web, vous pouvez recherchez grâce à la barre de recherche et au filtrer à disposition des informations detaillé liés aux artistes, les tistres des chansons, le genres, les distributeurs et les producteurs.(Il faut cependant reinsegner le nom exact pour la recherche)
+Dans l'application Web, vous pouvez recherchez grâce à la barre de recherche et au filtre à disposition des informations detaillés liés aux artistes, les tistres des chansons, le genres, les distributeurs et les producteurs.(Il faut cependant reinsegner le nom exact pour la recherche)
 
 ### Conclusion 
 
-La visualisation graphique de la donnée permet de faire ressortir des nombreuses tendences interessantes liés aux préférences du grand public. 
+La visualisation graphique de la données permet de faire ressortir des nombreuses tendences interessantes liés aux préférences du grand public. 
 
-Ici par exemple on peut voir comment l'arrivé de noel influence lurdement les abitudes des auditeurs avec une monté en popularité du jazz et des chansons de noël: 
+Ici par exemple on peut voir comment l'arrivée de noel influence lurdement les abitudes des auditeurs avec une monté en popularité du jazz et des chansons de noël: 
 
 ![noel](assets/noel.jpg)
 
