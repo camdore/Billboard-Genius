@@ -403,6 +403,14 @@ if es.indices.exists('billboard')==True:
 else :
     bulk(es, generate_data(data))
 
+def search_init():
+    result = es.search(index="billboard", query= {"match_all": {}},size=4200)
+
+    results = []
+    [results.append(elt['_source']) for elt in result["hits"]["hits"]]
+
+    return results
+
 def search(query, field):
     QUERY ={
     "query": {
@@ -607,9 +615,8 @@ def graph_count(query,field):
         yaxis_title="Count"
     )
 
-    fig_json2 = fig.to_json()
 
-    return fig_json2
+    return fig
 
 def graph_classement(size,field):
     QUERY = {
@@ -681,10 +688,10 @@ def index():
         field = request.form.get('field')
         results = search(query, field)
         infos = searchinfos(query,field)
-
         return render_template('index.html', results=results, infos=infos)
     else:
-        return render_template('index.html')
+        results = search_init()
+        return render_template('index.html',results=results)
 
 
 
@@ -695,121 +702,106 @@ if __name__ == '__main__':
 # Lancer la page (pour l'instant) avec la commande "flask --app scraper_test run"
 ################################### DASH APP ###########################################
 
-# app = dash.Dash(__name__)
+app = dash.Dash(__name__)
 
-# app.layout = html.Div([
-#     html.H1(children='Dashboard Genius-Billboard', style={'text-align':'center','font-family':'Arial'}),
+app.layout = html.Div([
+    html.H1(children='Dashboard Genius-Billboard', style={'text-align':'center','font-family':'Arial'}),
 
-#     html.H2('Graphique de rang :',style={'font-family':'Arial'}),
+    html.H2('Graphique de rang :',style={'font-family':'Arial'}),
 
-#     html.Label('Barre de recherche : ',style={'font-family':'Arial'}),
+    html.Label('Barre de recherche : ',style={'font-family':'Arial'}),
 
-#     dcc.Input(id='search-input', type='text', placeholder='Enter a search query',value='Shut Down'),
-#     html.Button('Search', id='search-button', n_clicks=0),
+    dcc.Input(id='search-input', type='text', placeholder='Enter a search query',value='Shut Down'),
 
-#     dcc.RadioItems(
-#         options=[
-#             {'label': 'Title', 'value': 'Title'},
-#             {'label': 'Artist', 'value': 'Artist'},
-#             {'label': 'Genre', 'value': 'Genre'},
-#             {'label': 'Distributor', 'value': 'Distributor'},
-#             {'label': 'Producer', 'value': 'Producer'},
-#         ],
-#         id='search-field',
-#         value='Title',
-#     ),
-#     # html.Label('Graphe de rank : ',style={'font-family':'Arial'}),
+    dcc.RadioItems(
+        options=[
+            {'label': 'Title', 'value': 'Title'},
+            {'label': 'Artist', 'value': 'Artist'},
+            {'label': 'Genre', 'value': 'Genre'},
+            {'label': 'Distributor', 'value': 'Distributor'},
+            {'label': 'Producer', 'value': 'Producer'},
+        ],
+        id='search-field',
+        value='Title',
+    ),
 
-#     dcc.Graph(id='rank-graph'),
+    dcc.Graph(id='rank-graph'),
 
-#     html.H2('Graphique de count :',style={'font-family':'Arial'}),
+    html.H2('Graphique de count :',style={'font-family':'Arial'}),
 
-#     html.Label('Barre de recherche : ',style={'font-family':'Arial'}),
+    html.Label('Barre de recherche : ',style={'font-family':'Arial'}),
 
-#     dcc.Input(id='search-input2', type='text', placeholder='Enter a search query',value='Christmas'),
-#     html.Button('Search', id='search-button2', n_clicks=0),
+    dcc.Input(id='search-input2', type='text', placeholder='Enter a search query',value='Christmas'),
 
-#     dcc.RadioItems(
-#         options=[
-#             {'label': 'Title', 'value': 'Title'},
-#             {'label': 'Artist', 'value': 'Artist'},
-#             {'label': 'Genre', 'value': 'Genre'},
-#             {'label': 'Distributor', 'value': 'Distributor'},
-#             {'label': 'Producer', 'value': 'Producer'},
-#         ],
-#         id='search-field2',
-#         value='Genre',
+    dcc.RadioItems(
+        options=[
+            {'label': 'Title', 'value': 'Title'},
+            {'label': 'Artist', 'value': 'Artist'},
+            {'label': 'Genre', 'value': 'Genre'},
+            {'label': 'Distributor', 'value': 'Distributor'},
+            {'label': 'Producer', 'value': 'Producer'},
+        ],
+        id='search-field2',
+        value='Genre',
         
-#     ),
+    ),
 
-#     # html.Label('Graphe de count : ',style={'font-family':'Arial'}),
-#     dcc.Graph(id='count-graph'),
-
-
-#     html.H2('Graphique de classement :',style={'font-family':'Arial'}),
-
-#     dcc.Slider(10,60, 
-#         step =5,
-#         id='size-slider',
-#         value=10,
-#     ),
-
-#     dcc.RadioItems(
-#         options=[
-#             {'label': 'Artist.keyword', 'value': 'Artist.keyword'},
-#             {'label': 'Genre.keyword', 'value': 'Genre.keyword'},
-#         ],
-#         id='search-field3',
-#         value='Genre.keyword',
-#     ),
-
-#     # html.Label('Graphe de classement : ',style={'font-family':'Arial'}),
-#     dcc.Graph(id='classement-graph')
-# ])
-
-# @app.callback(
-#     Output('rank-graph', 'figure'),
-#     Input('search-button', 'n-clicks'),
-#     Input('search-field', 'value'),
-#     State('search-input', 'value'),
-# )
-# def update_rank_graph(n_clicks,field, query):
-#     # if n_clicks is not None and n_clicks > 0:
-#     if n_clicks:
-#         fig = graph_rank(query, field)
-#         return fig
-#     else:
-#         return dash.no_update
+    dcc.Graph(id='count-graph'),
 
 
-# @app.callback(
-#     Output('count-graph', 'figure'),
-#     Input('search-button2', 'n-clicks'),
-#     Input('search-field2', 'value'),
-#     State('search-input2', 'value'),
-# )
+    html.H2('Graphique de classement :',style={'font-family':'Arial'}),
 
-# def update_count_graph(n_clicks,field, query):
-#     # if n_clicks is not None and n_clicks > 0:
-#     if n_clicks:    
-#         fig = graph_count(query, field)
-#         return fig
-#     else:
-#         return dash.no_update
+    dcc.Slider(10,60, 
+        step =5,
+        id='size-slider',
+        value=10,
+    ),
 
+    dcc.RadioItems(
+        options=[
+            {'label': 'Artist.keyword', 'value': 'Artist.keyword'},
+            {'label': 'Genre.keyword', 'value': 'Genre.keyword'},
+        ],
+        id='search-field3',
+        value='Genre.keyword',
+    ),
+
+    dcc.Graph(id='classement-graph')
+])
+
+@app.callback(
+    Output('rank-graph', 'figure'),
+    Input('search-input', 'value'),
+    Input('search-field', 'value'),
+)
+
+def update_rank_graph(query, field):
+    fig = graph_rank(query, field)
+    return fig
+
+
+@app.callback(
+    Output('count-graph', 'figure'),
+    Input('search-input2', 'value'),
+    Input('search-field2', 'value'),
+)
+
+def update_count_graph(query, field):
+    fig = graph_count(query, field)
+    return fig
     
-# @app.callback(
-#     Output('classement-graph', 'figure'),
-#     Input('size-slider', 'value'),
-#     Input('search-field3', 'value')
-# )
-# def update_classement_graph(size, field):
-#     fig = graph_classement(size, field)
-#     return fig
+@app.callback(
+    Output('classement-graph', 'figure'),
+    Input('size-slider', 'value'),
+    Input('search-field3', 'value')
+)
+def update_classement_graph(size, field):
+    fig = graph_classement(size, field)
+    return fig
 
 
-# if __name__ == '__main__':
-#     app.run_server(debug=True,port=8051) # RUN APP
+if __name__ == '__main__':
+    app.run_server(debug=False,port=8051) # RUN APP
 
 end_time = time.time()
 execution_time = end_time - start_time

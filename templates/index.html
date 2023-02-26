@@ -29,7 +29,13 @@
         <input type="submit" name="submit" value="Search">
     </form>
 
-
+    <div class="container mt-4">
+      {% if infos %}
+        <h2>Informations de la recherche</h2>
+        <p>{{ infos }}</p>
+      {% endif %}
+    </div>
+    
     <div class="container mt-4">
       <h1>Résultats de la recherche</h1>
       {{ table | safe }}
