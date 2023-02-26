@@ -403,6 +403,14 @@ if es.indices.exists('billboard')==True:
 else :
     bulk(es, generate_data(data))
 
+def search_init():
+    result = es.search(index="billboard", query= {"match_all": {}},size=4200)
+
+    results = []
+    [results.append(elt['_source']) for elt in result["hits"]["hits"]]
+
+    return results
+
 def search(query, field):
     QUERY ={
     "query": {
@@ -607,9 +615,8 @@ def graph_count(query,field):
         yaxis_title="Count"
     )
 
-    fig_json2 = fig.to_json()
 
-    return fig_json2
+    return fig
 
 def graph_classement(size,field):
     QUERY = {
@@ -681,10 +688,10 @@ def index():
         field = request.form.get('field')
         results = search(query, field)
         infos = searchinfos(query,field)
-
         return render_template('index.html', results=results, infos=infos)
     else:
-        return render_template('index.html')
+        results = search_init()
+        return render_template('index.html',results=results)
 
 
 
