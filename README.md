@@ -73,7 +73,7 @@ Veuillez copier coller cette url dans votre navigateur préféré pour pouvoir a
 
 ### Copyright
 
-Je déclare sur l’honneur que le code fourni a été produit par moi/nous même, à l’exception des lignes ci dessous.
+On déclare sur l’honneur que le code fourni a été produit par nous même.
 
 ## L'application web 
 
