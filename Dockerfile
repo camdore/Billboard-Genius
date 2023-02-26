@@ -16,5 +16,5 @@ RUN pip install -r /requirements.txt
 # On install les dépendances via pipenv
 RUN  pip install --upgrade pip &&  pip install pipenv && pipenv install --skip-lock
 
-CMD ["python", "scraper_test.py" ]
+CMD ["python", "flask_app.py" ]
 #CMD ["/bin/bash"]
