@@ -6,9 +6,9 @@ Ce projet python permet de créer une application dédiée à la musique contena
 
 Pour cela nous avons récuperé par le biasis du scraping les donnée contenus dans deux sites web : 
 
-1) Billbord : nous permet de récupérer le classement hebdomadaire des 200 meilleurs chansons d'artistes du classement global 200. Dans le classement du Billboard global 200 les données récupés sont le nom de l'artiste, le titre et des informations liés le rang de la chanson tel que le rang occupé dans semaine actuelle, le meilleur rang atteint et le nombre de semaines que le titre a passé dans le classement.
+1) **Billbord** : nous permet de récupérer le classement hebdomadaire des 200 meilleurs chansons d'artistes du classement global 200. Dans le classement du Billboard global 200 les données récupés sont le nom de l'artiste, le titre et des informations liés le rang de la chanson tel que le rang occupé dans semaine actuelle, le meilleur rang atteint et le nombre de semaines que le titre a passé dans le classement.
 
-2) Genius : nous permet de récupérer des données plus spécifiques telles que les genres musicaux, le producteurs, Les dstributeurs et les écrivains du text
+2) **Genius** : nous permet de récupérer des données plus spécifiques telles que les genres musicaux, le producteurs, Les dstributeurs et les écrivains du text
 
 Pour une meilleure visualisation des données récuperés le scraping est effectué sur une durée de 5 mois.(Il est important de noter que à cause d'une durée d'attente de environ 2h pour effetuer le scraping dans ça totalité il à été pensé judicieux de stocker les données du mois d'octobre 2022 jusqu'au mois de février 2023 dans un fichier csv).
 
@@ -71,16 +71,6 @@ Veuillez copier coller cette url dans votre navigateur préféré pour pouvoir a
 
 ### Fonctions des différents fichiers 
 
-requirement.txt contient les instructions pour installer les librairies nécessaires.
-
-csv_geoloc.csv contient les données pour les saisons 2003 à 2017 de Lebron James.
-
-functions.py contient les fonctions essentiellement utilisées pour le nettoyage de la dataframe.
-
-main.py contient tout le code permettant d'éxecuter et lancer l'app.
-
-Le répertoire assets contient l'image positions_basket.jpg utilisée dans le README.md de ce projet. 
-
 ### Copyright
 
 Je déclare sur l’honneur que le code fourni a été produit par moi/nous même, à l’exception des lignes ci dessous.
@@ -89,13 +79,19 @@ Je déclare sur l’honneur que le code fourni a été produit par moi/nous mêm
 
 Dans l'application Web, vous pouvez recherchez grâce à la barre de recherche et au filtrer à disposition des informations detaillé liés aux artistes, les tistres des chansons, le genres, les distributeurs et les producteurs.(Il faut cependant reinsegner le nom exact pour la recherche)
 
-
-
 ### Conclusion 
 
-La visualisation graphique de la donnée permet de faire ressortir des nombreuses tendences interessantes des préférences du grand public. Parmi celle-ci on peut voir comment l'arrivé du noel influence lurdement les abitudes des auditeurs
+La visualisation graphique de la donnée permet de faire ressortir des nombreuses tendences interessantes des préférences du grand public. 
 
+Ici par exemple peut voir comment l'arrivé du noel influence lurdement les abitudes des auditeurs: 
 
+![tendence dans la periode de noel](BILLboard-Genius/assets/noel)
+
+![tendence dans la periode de noel](BILLboard-Genius/assets/hip_pop)
+
+![tendence dans la periode de noel](BILLboard-Genius/assets/jazz)
+
+![tendence dans la periode de noel](BILLboard-Genius/assets/rock)
 
 ## Auteurs 
 
