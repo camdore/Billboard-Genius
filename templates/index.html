@@ -20,28 +20,15 @@
     <form method="POST">
         <input type="text" name="query" placeholder="Enter your search query" required>
         <br><br>
-        <label><input type="checkbox" name="field" value="Title"> Title</label>
-        <label><input type="checkbox" name="field" value="Artist"> Artist</label>
-        <label><input type="checkbox" name="field" value="Genre"> Genre</label>
-        <label><input type="checkbox" name="field" value="Distributor"> Distributor</label>
-        <label><input type="checkbox" name="field" value="Producer"> Producer</label>
+        <label><input type="radio" name="field" value="Title"> Title</label>
+        <label><input type="radio" name="field" value="Artist"> Artist</label>
+        <label><input type="radio" name="field" value="Genre"> Genre</label>
+        <label><input type="radio" name="field" value="Distributor"> Distributor</label>
+        <label><input type="radio" name="field" value="Producer"> Producer</label>
         <br><br>
         <input type="submit" name="submit" value="Search">
     </form>
 
-    <div id="plotly-graph-div"></div>
-    <script>
-
-      var plot = {{ plot|safe }};
-      Plotly.newPlot('plotly-graph-div', plot.data, plot.layout);
-
-    </script>
-    <div class="container mt-4">
-      {% if infos %}
-        <h2>Informations de la recherche</h2>
-        <p>{{ infos }}</p>
-      {% endif %}
-    </div>
 
     <div class="container mt-4">
       <h1>Résultats de la recherche</h1>
