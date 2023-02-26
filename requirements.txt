@@ -1,4 +1,3 @@
-bs4
 datetime
 elasticsearch
 Flask
@@ -8,8 +7,6 @@ matplotlib
 numpy
 pandas
 plotly.express
-pymongo
 requests
-Scrapy
 selenium
 webdriver_manager
