@@ -45,9 +45,9 @@ Placez vous d'abord dans le repertoire approprié avec la commande suivante :
 
     cd /path /Billboard-Genius
 
-Puis, entrez la commande suivante pour construire les conteneurs avec Docker. Il faut également avoir assez d'espace sur votre disque dur (environ 1.5Go). En faisant cela, les installations nécessaires pour les différents packages utilisés seront effectués automatiquement.
+Pour lancer l'app flask faites cette commande :
 
-    docker-compose up -d
+    python .\flask_app.py
 
 Nous avons maintenant 3 conteneurs qui se lancent. A la fin de leur build, nous avons une adresse locale qui est :
 
@@ -55,6 +55,13 @@ Nous avons maintenant 3 conteneurs qui se lancent. A la fin de leur build, nous 
 
 Veuillez copier coller cette url dans votre navigateur préféré pour pouvoir accéder à notre application Web.
 
+Pour lancer l'app dash faites cette commande :
+
+    python .\dash_app.py  
+
+Veuillez copier coller cette url dans votre navigateur préféré pour pouvoir accéder à notre application Web.
+    http://127.0.0.1:8051/
+    
 ## Developper Guide 
 
 ### Arbre du projet
