@@ -41,8 +41,7 @@ def artist_graph():
 
     return render_template('artist_graph.html')
 
-if __name__ == "__main__":
-    app.run()
-
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
 
 #Lancer la page (pour l'instant) avec la commande "flask --app testA run"
