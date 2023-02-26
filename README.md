@@ -81,20 +81,18 @@ Dans l'application Web, vous pouvez recherchez grâce à la barre de recherche e
 
 ### Conclusion 
 
-La visualisation graphique de la donnée permet de faire ressortir des nombreuses tendences interessantes des préférences du grand public. 
+La visualisation graphique de la donnée permet de faire ressortir des nombreuses tendences interessantes liés aux préférences du grand public. 
 
 Ici par exemple peut voir comment l'arrivé du noel influence lurdement les abitudes des auditeurs: 
 
-![noel](Billboard-Genius/assets/noel.png)
+![noel](Billboard-Genius/assets/noel.jpg)
 
-![hip_po](BIllboard-Genius/assets/hip_pop.png)
+![hip_po](BIllboard-Genius/assets/hip_pop.jpg)
 
-![jazz](Billboard-Genius/assets/jazz.png)
+![jazz](Billboard-Genius/assets/jazz.jpg)
 
-![rock](Billboard-Genius/assets/rock.png)
+![rock](Billboard-Genius/assets/rock.jpg)
 
-
-![Positions des joueurs sur un terrain de basket](projet-python/assets/positions_basket.jpg)
 
 ## Link project
 
