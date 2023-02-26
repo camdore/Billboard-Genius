@@ -35,14 +35,8 @@ def index():
     # Retourner le tableau complet par défaut
     return render_template("index.html", table=data.to_html(classes="table", index=False, table_id="table"))
 
-@app.route("/artist_graph")
 
-def artist_graph():
-
-    return render_template('artist_graph.html')
-
-if __name__ == "__main__":
-    app.run()
-
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
 
 #Lancer la page (pour l'instant) avec la commande "flask --app testA run"

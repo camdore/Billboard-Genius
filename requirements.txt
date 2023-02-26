@@ -1,0 +1,12 @@
+datetime
+elasticsearch
+flask
+Flask-Cors
+Flask-WTF
+matplotlib
+numpy
+pandas
+plotly.express
+requests
+selenium
+webdriver_manager

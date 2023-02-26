@@ -2,24 +2,19 @@
 FROM python:3.11
 
 
-# Définissez le répertoire de travail à l'intérieur du conteneur
-WORKDIR /app
-<<<<<<< HEAD
-=======
+# On lance des commandes directement dans le conteneur
+# Ici pour créer des dossiers
+RUN mkdir /home/dev/ && mkdir /home/dev/code/
 
-#Ouvre et installe les différents loigiciels requis
->>>>>>> 139b30b5715d9cf778db9014e95f4cb60de80a15
-RUN  pip install --upgrade pip
-RUN pip install selenium bs4 pandas webdriver_manager pipenv
-RUN pipenv install --skip-lock
+# On place le répertoire de travail du conteneur
+WORKDIR /home/dev/code/
 
-# Copiez le code du programme dans le conteneur
-COPY . /app
+# On copie l'ensemble des fichiers directement dans le dossier de travail du conteneur
+COPY . .
+COPY requirements.txt /
+RUN pip install -r /requirements.txt
+# On install les dépendances via pipenv
+RUN  pip install --upgrade pip &&  pip install pipenv && pipenv install --skip-lock
 
-<<<<<<< HEAD
-
-=======
-#Lance le programme souhaité
->>>>>>> 139b30b5715d9cf778db9014e95f4cb60de80a15
-CMD ["python", "test_ekue.py" ]
+CMD ["python", "testA.py" ]
 #CMD ["/bin/bash"]
