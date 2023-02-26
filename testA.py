@@ -36,8 +36,7 @@ def index():
     return render_template("index.html", table=data.to_html(classes="table", index=False, table_id="table"))
 
 
-if __name__ == "__main__":
-    app.run()
-
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
 
 #Lancer la page (pour l'instant) avec la commande "flask --app testA run"
