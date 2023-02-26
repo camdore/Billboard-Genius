@@ -4,9 +4,12 @@ elasticsearch
 Flask
 Flask-Cors
 Flask-WTF
+matplotlib
 numpy
 pandas
 plotly.express
 pymongo
+requests
+Scrapy
 selenium
 webdriver_manager
